@@ -1,8 +1,7 @@
-const { date } = require("joi");
 const mongoose = require("mongoose");
 const{Schema}=mongoose;
 
-const reviewSchema=newSchema({
+const reviewSchema=new Schema({
     comment:String,
     rating:{
         type:Number,
@@ -10,8 +9,8 @@ const reviewSchema=newSchema({
         max:5,
     },
     createdAt:{
-        type:date,
-        default:Date.now(),
+        type:Date,
+        default:Date.now,
     },
 });
 
