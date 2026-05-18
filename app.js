@@ -8,7 +8,7 @@ const ejsMate = require("ejs-mate");
 
 //To handle Error
 // const wrapAsync = require("./utils/wrapAsync.js");
-// const ExpressError = require("./utils/ExpressError.js");
+const ExpressError = require("./utils/ExpressError.js");
 //For server side validation
 // const { listingSchema, reviewSchema } = require("./schema.js");
 // const Review = require("./models/review.js");
@@ -27,6 +27,9 @@ app.use(methodOverride('_method'));
 //Express Router used 
 const listings = require("./routes/listing.js");
 const reviews = require("./routes/review.js");
+
+const session = require("express-session");
+const flash = require("connect-flash");
 
 const port = 8080;
 
@@ -49,6 +52,26 @@ async function main() {
 
 app.get("/", (req, res) => {
     res.send("Hiii I am root");
+});
+
+const sessionOptions = {
+    resave: false,
+    saveUninitialized: true,
+    secret: "mysecretkey",
+    cookie: {
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+    },
+};
+
+app.use(session(sessionOptions));
+app.use(flash());
+
+app.use((req, res, next) => {
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    next();
 });
 
 app.use("/listings", listings);
