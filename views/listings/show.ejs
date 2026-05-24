@@ -1,5 +1,8 @@
 <% layout('/layouts/boilerplate.ejs') %>
-
+    <script>
+        const mapToken = "<%= process.env.MAP_TOKEN %>"
+        const listing = <%- JSON.stringify(listing) %>;
+    </script>
     <div class="row mt-3">
         <div class="col-8 offset-3">
             <h3>
@@ -70,30 +73,36 @@
                 </form>
                 <hr>
                 <%}%>
-
-                    <p><b>All Reviews</b></p>
-                    <div class="row">
-                        <% for(review of listing.reviews){ %>
-                            <div class="card col-5 ms-2 mb-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        @<%= review.author.username %>
-                                    </h5>
-                                    <p class="card-text">
-                                        <%=review.comment%>
-                                    </p>
-                                    <p class="starability-result card-text" data-rating=<%=review.rating%>>
-                                    </p>
+                    <% if(listing.reviews.length>0){ %>
+                        <div class="row">
+                            <p><b>All Reviews</b></p>
+                            <% for(review of listing.reviews){ %>
+                                <div class="card col-5 ms-2 mb-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            @<%= review.author.username %>
+                                        </h5>
+                                        <p class="card-text">
+                                            <%=review.comment%>
+                                        </p>
+                                        <p class="starability-result card-text" data-rating=<%=review.rating%>>
+                                        </p>
+                                    </div>
+                                    <% if(currUser && review.author._id.equals(currUser._id)) {%>
+                                        <form method="post"
+                                            action="/listings/<%=listing._id%>/review/<%=review._id%>?_method=DELETE"
+                                            class="mb-2">
+                                            <button class="btn btn-danger  btn-sm mt-2">Delete</button>
+                                        </form>
+                                        <% } %>
                                 </div>
-                                <% if(currUser && review.author._id.equals(currUser._id)) {%>
-                                    <form method="post"
-                                        action="/listings/<%=listing._id%>/review/<%=review._id%>?_method=DELETE"
-                                        class="mb-2">
-                                        <button class="btn btn-danger  btn-sm mt-2">Delete</button>
-                                    </form>
-                                    <% } %>
-                            </div>
-                            <%} %>
-                    </div>
+                                <%} %>
+                        </div>
+                        <%} %>
+        </div>
+        <div class="col-6 offset-3  mb-3 ">
+            <h3>Explore the area</h3>
+            <div id="map"></div>
         </div>
     </div>
+    <script src="/js/map.js"></script>

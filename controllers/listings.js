@@ -1,5 +1,8 @@
 const Listing = require("../models/listing");
 const { cloudinary } = require("../cloudConfig.js");
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const mapToken = process.env.MAP_TOKEN;
+const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
 module.exports.index = async (req, res) => {
     const allListings = await Listing.find({});
@@ -19,17 +22,24 @@ module.exports.showListing = async (req, res) => {
         return res.redirect("/listings");
     }
     res.render("listings/show.ejs", { listing });
-    console.log(listing);
 };
 
 
 module.exports.createListing = async (req, res) => {
+    let response = await geocodingClient.forwardGeocode({
+        query: req.body.listing.location,
+        limit: 1
+    })
+        .send();
+
     let url = req.file.path;
     let filename = req.file.filename;
     const newListing = await new Listing(req.body.listing);
     newListing.owner = req.user._id;
     newListing.image = { url, filename };
-    await newListing.save();
+    newListing.geometry = response.body.features[0].geometry;
+    let savedListing = await newListing.save();
+    console.log(savedListing)
     req.flash("success", "Listing Added");
     res.redirect("/listings");
 };
@@ -50,7 +60,14 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.updateListing = async (req, res) => {
     let { id } = req.params;
-    let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    //geocoding to update
+    let response = await geocodingClient.forwardGeocode({
+        query: req.body.listing.location,
+        limit: 1
+    })
+        .send();
+    let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing, geometry: response.body.features[0].geometry }, { new: true });
+
     if (typeof req.file != "undefined") {
         await cloudinary.uploader.destroy(listing.image.filename); // delete old
         let url = req.file.path;
