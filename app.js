@@ -1,5 +1,5 @@
-if(process.env.NODE_ENV!="production"){
-require('dotenv').config();
+if (process.env.NODE_ENV != "production") {
+    require('dotenv').config();
 }
 const express = require("express");
 const app = express();
@@ -41,7 +41,8 @@ const User = require("./models/user.js");
 
 const port = 8080;
 
-let MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+// let MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+const dbUrl = process.env.ATLASDB_URL;
 
 main()
     .then(() => {
@@ -55,12 +56,12 @@ main()
     });
 
 async function main() {
-    await mongoose.connect(MONGO_URL);
+    await mongoose.connect(dbUrl);
 }
 
-app.get("/", (req, res) => {
-    res.send("Hiii I am root");
-});
+// app.get("/", (req, res) => {
+//     res.send("Hiii I am root");
+// });
 
 const sessionOptions = {
     resave: false,
@@ -86,7 +87,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
-    res.locals.currUser=req.user;
+    res.locals.currUser = req.user;
     next();
 });
 

@@ -21,7 +21,7 @@ module.exports.showListing = async (req, res) => {
         req.flash("error", "Listing does not exist");
         return res.redirect("/listings");
     }
-    res.render("listings/show.ejs", { listing });
+    res.render("listings/show.ejs", { listing, mapToken: process.env.MAP_TOKEN });
 };
 
 
@@ -39,7 +39,6 @@ module.exports.createListing = async (req, res) => {
     newListing.image = { url, filename };
     newListing.geometry = response.body.features[0].geometry;
     let savedListing = await newListing.save();
-    console.log(savedListing)
     req.flash("success", "Listing Added");
     res.redirect("/listings");
 };
@@ -82,7 +81,6 @@ module.exports.updateListing = async (req, res) => {
 
 module.exports.destroyListing = async (req, res) => {
     let { id } = req.params;
-    console.log(id);
     await Listing.findByIdAndDelete(id);
     req.flash("success", "Listing Deleted");
     res.redirect("/listings");

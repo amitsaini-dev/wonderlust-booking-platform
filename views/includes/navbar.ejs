@@ -1,4 +1,5 @@
-<nav class="navbar navbar-expand-md navbar-light bg-body-light border-bottom sticky-top">
+<link rel="stylesheet" href="/css/style.css">
+<nav class="navbar navbar-expand-md navbar-light bg-white border-bottom sticky-top">
   <div class="container-fluid">
     <a class="navbar-brand" href="/listings"><i class="fa-regular fa-compass"></i></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
@@ -9,13 +10,20 @@
         <a class="nav-link" href="/listings">Explore</a>
       </div>
       <div class="navbar-nav ms-auto">
+        <form class="d-flex">
+          <input class="form-control me-2 search-input" type="search" placeholder="Explore destinations"
+            aria-label="Search">
+          <button class="btn search-btn" type="submit"> <i class="fa-solid fa-magnifying-glass"></i> Search</button>
+        </form>
+      </div>
+      <div class="navbar-nav ms-auto">
         <a class="nav-link" href="/listings/new">Add new Listing</a>
         <% if(currUser){ %>
           <span class="nav-link">Hi, <%= currUser.username %></span>
-          <a class="nav-link" href="/logout">Logout</a>
+          <a class="nav-link" href="/logout"> <b>Logout</b> </a>
           <% } else { %>
-            <a class="nav-link" href="/signup">Signup</a>
-            <a class="nav-link" href="/login">Login</a>
+            <a class="nav-link" href="/signup"> <b>Signup</b> </a>
+            <a class="nav-link" href="/login"> <b> Login</b></a>
             <% } %>
       </div>
     </div>

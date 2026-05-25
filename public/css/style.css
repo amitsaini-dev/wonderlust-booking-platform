@@ -24,6 +24,17 @@ body {
     color: #222222 !important;
 }
 
+.navbar-collapse.show {
+    position: absolute;
+    top: 5rem;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border-bottom: 1px solid #dee2e6;
+    padding: 0.5rem 1.5rem;
+    z-index: 1049;
+}
+
 /* Footer */
 .f-info-links a {
     text-decoration: none;
@@ -69,6 +80,7 @@ body {
     border-radius: 1rem !important;
     width: 100% !important;
     object-fit: cover !important;
+    height: clamp(150px, 40vw, 320px);
 }
 
 .card-body {
@@ -108,13 +120,17 @@ body {
 
 /* Show page */
 .show-img {
-    height: 30vh;
+    /* height: 30vh; */
+    height: clamp(180px, 35vw, 300px);
+    ;
     object-fit: cover;
 }
 
 .btns {
     display: flex;
     gap: 15px;
+    flex-wrap: wrap;
+    padding-bottom: 1rem;
 }
 
 .show-card {
@@ -124,6 +140,51 @@ body {
 
 /* Map */
 #map {
-    height: 80vh;
+    height: 400px;
     width: 100%;
+}
+
+/* For filter bar */
+#filters::-webkit-scrollbar {
+    display: none;
+}
+
+.filter {
+    color: #717171;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    padding-bottom: 0.5rem;
+}
+
+.filter:hover {
+    color: black;
+    border-bottom: 2px solid black;
+}
+
+/* tax-toggle */
+.tax-info {
+    display: none;
+}
+
+/* Search Btn */
+.search-btn {
+    background-color: #fe424d;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+    border-radius: 25px;
+    padding: 0 1rem 0 1rem;
+}
+
+.search-btn:hover {
+    background-color: #fe424d;
+    color: white;
+}
+
+.search-input {
+    border-radius: 25px;
+    padding: 0.5rem 3rem 0.5rem 3rem;
+    font-size: 1rem;
 }
