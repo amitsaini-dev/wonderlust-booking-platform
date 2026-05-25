@@ -59,25 +59,23 @@ main()
 async function main() {
     await mongoose.connect(dbUrl);
 }
-
-// app.get("/", (req, res) => {
-//     res.send("Hiii I am root");
-// });
-
-const store=MongoStore.create({
-    mongoUrl:dbUrl,
-    crypto:{
-        secret:process.env.SECRET,
+app.get("/", (req, res) => {
+    res.redirect("/listings");
+});
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    crypto: {
+        secret: process.env.SECRET,
     },
-    touchAfter:24*3600,
+    touchAfter: 24 * 3600,
 });
 
-store.on("error",()=>{
+store.on("error", () => {
     console.log("error in monogo session store");
 });
 
 const sessionOptions = {
-    store:store,
+    store: store,
     resave: false,
     saveUninitialized: true,
     secret: process.env.SECRET,
