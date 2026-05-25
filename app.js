@@ -33,6 +33,7 @@ const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
 const session = require("express-session");
+const MongoStore = require('connect-mongo').default;
 const flash = require("connect-flash");
 
 const passport = require("passport");
@@ -63,10 +64,23 @@ async function main() {
 //     res.send("Hiii I am root");
 // });
 
+const store=MongoStore.create({
+    mongoUrl:dbUrl,
+    crypto:{
+        secret:process.env.SECRET,
+    },
+    touchAfter:24*3600,
+});
+
+store.on("error",()=>{
+    console.log("error in monogo session store");
+});
+
 const sessionOptions = {
+    store:store,
     resave: false,
     saveUninitialized: true,
-    secret: "mysecretkey",
+    secret: process.env.SECRET,
     cookie: {
         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         maxAge: 7 * 24 * 60 * 60 * 1000,
